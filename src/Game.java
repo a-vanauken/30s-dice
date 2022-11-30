@@ -44,7 +44,7 @@ public class Game {
         System.out.println("ENTER PLAYER TWO'S NAME: ");
         Player playerTwo = new Player(gameReader.nextLine());
         //System.out.println("WELCOME " + playerOne.getName() + " AND " + playerTwo.getName() + "!");
-        System.out.println("\n    +-------------------- WELCOME " + playerOne.getName() + " AND " + playerTwo.getName() + "! --------------------+\n");
+        System.out.println("\n +-------------------- WELCOME " + playerOne.getName() + " AND " + playerTwo.getName() + "! --------------------+\n");
 
     }
 
@@ -101,9 +101,33 @@ public class Game {
     }
 
     public void playGame() {
-        System.out.println("*Run game loop*");
+        //create set of dice
+        Die dieOne = new Die();
+        Die dieTwo = new Die();
+        //roll dice to see who goes first
+        System.out.println("WE'LL ROLL TO SEE WHO GOES FIRST.");
+        boolean playerSelected = false;
+        while (playerSelected == false) {
+            System.out.println("\nPLAYER ONE ROLLED:");
+            dieOne.roll();
+            System.out.println("\nPLAYER TWO ROLLED:");
+            dieTwo.roll();
+            if (dieOne.getFaceValue() > dieTwo.getFaceValue()) {
+                System.out.println("\nPLAYER ONE GOES FIRST!");
+                playerSelected = true;
+            } else if (dieOne.getFaceValue() < dieTwo.getFaceValue()) {
+                System.out.println("\nPLAYER TWO GOES FIRST!");
+                playerSelected = true;
+            } else {
+                System.out.println("\nTIE! ROLL AGAIN!");
+            }
+        }
+        //start turn
 
         //roll dice
+        System.out.println("\nYOU ROLLED: ");
+        dieOne.roll();
+        dieTwo.roll();
         //let them choose what to add to their score
         //setPlayerScore();
         //check if they win or bust
@@ -113,6 +137,7 @@ public class Game {
         //else repeat for next player
 
     }
+
 
     public void displayScoreboard() {
         System.out.print("*Display scoreboard");
