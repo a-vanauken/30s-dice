@@ -1,31 +1,44 @@
-public class Player {
-    private String name;
+public class Player
+{
+    private final String name;
     private int score;
     private int wins;
 
-    public Player(String playerName) {
+    public Player(String playerName)
+    {
         name = playerName;
         score = 0;
         wins = 0;
     }
 
-    public String getName() {
+    public String getName()
+    {
         return name.toUpperCase();
     }
 
-    public int getScore() {
+    public int getScore()
+    {
         return score;
     }
 
-    public void setScore(int newScore) {
-        this.score += newScore;
+    public void setScore(int newScore)
+    {
+        if (newScore == 0)
+        {
+            this.score = 0;
+        } else
+        {
+            this.score += newScore;
+        }
     }
 
-    public int getWins() {
+    public int getWins()
+    {
         return wins;
     }
 
-    public void setWins(int newWin) {
-        this.wins += newWin;
+    public void addWin()
+    {
+        this.wins++;
     }
 }

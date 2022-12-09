@@ -1,18 +1,23 @@
 
 import java.util.Scanner;
 
-public class Game {
+public class Game
+{
     Scanner gameReader;
-    private int numPlayers;
-    private int winningScore;
+    private final int numPlayers = 2;
+    private final int winningScore = 30;
 
-    public Game() {
+    final int playerOne = 0;
+    final int playerTwo = 1;
+    private final Player[] players = new Player[numPlayers];
+
+    public Game()
+    {
         gameReader = new Scanner(System.in);
-        numPlayers = 2;
-        winningScore = 30;
     }
 
-    public void gameInit() {
+    public void welcome()
+    {
         //display game title
         System.out.println("\n" +
                 "\n" +
@@ -40,20 +45,22 @@ public class Game {
                 "\n");
         //ask for player names and welcome them
         System.out.println("ENTER PLAYER ONE'S NAME: ");
-        Player playerOne = new Player(gameReader.nextLine());
+        players[playerOne] = new Player(gameReader.nextLine());
         System.out.println("ENTER PLAYER TWO'S NAME: ");
-        Player playerTwo = new Player(gameReader.nextLine());
-        //System.out.println("WELCOME " + playerOne.getName() + " AND " + playerTwo.getName() + "!");
-        System.out.println("\n +-------------------- WELCOME " + playerOne.getName() + " AND " + playerTwo.getName() + "! --------------------+\n");
-
+        players[playerTwo] = new Player(gameReader.nextLine());
+        System.out.println("\n +-------------------- WELCOME " + players[playerOne].getName() + " AND " + players[playerTwo].getName() + "! --------------------+\n");
     }
 
-    public void displayRules() {
+    public void displayRules()
+    {
+        //Ask the user if they want to see the rules before starting
         boolean validInput = false;
-        while (validInput == false) {
+        while (!validInput)
+        {
             System.out.println("DO YOU WANT TO SEE THE RULES?\nY / N");
             String viewRules = gameReader.nextLine();
-            if (viewRules.equals("y")) {
+            if (viewRules.equals("y"))
+            {
                 System.out.println("\n    +-----------------------------------------------------------------------+\n" +
                         "    |                                RULES                                  |\n" +
                         "    +-----------------------------------------------------------------------+\n" +
@@ -74,75 +81,189 @@ public class Game {
                         "    +-----------------------------------------------------------------------+\n");
 
                 validInput = true;
-            } else if (viewRules.equals("n")) {
-                System.out.println("AH, SO YOU'VE BEEN HERE BEFORE. LET'S GET GOING THEN!");
+            } else if (viewRules.equals("n"))
+            {
                 validInput = true;
-            } else {
+            } else
+            {
                 System.out.println("NOT A VALID INPUT. TRY AGAIN.");
             }
         }
     }
 
-    public void startGame() {
+    public boolean startGame()
+    {
+        //Ask the user if they are ready to begin. If not we exit.
         boolean startGame = false;
-        while (startGame == false) {
+        while (!startGame)
+        {
             System.out.println("READY TO BEGIN?\nY / N");
             String readyCheck = gameReader.nextLine();
-            if (readyCheck.equals("y")) {
-                playGame();
+            if (readyCheck.equals("y"))
+            {
                 startGame = true;
-            } else if (readyCheck.equals("n")) {
-                System.out.println("SEE YOU NEXT TIME, SCAREDY CAT!");
+            } else if (readyCheck.equals("n"))
+            {
+                System.out.println("SEE YOU NEXT TIME!");
                 System.exit(0);
-            } else {
+            } else
+            {
                 System.out.println("NOT A VALID INPUT. TRY AGAIN.");
             }
         }
+        return true;
     }
 
-    public void playGame() {
-        //create set of dice
+    public void playGame()
+    {
+        //Main game loop
+        //Create set of dice
         Die dieOne = new Die();
         Die dieTwo = new Die();
-        //roll dice to see who goes first
-        System.out.println("WE'LL ROLL TO SEE WHO GOES FIRST.");
-        boolean playerSelected = false;
-        while (playerSelected == false) {
-            System.out.println("\nPLAYER ONE ROLLED:");
+        //Roll dice to see who goes first
+        System.out.println("LET'S ROLL TO SEE WHO GOES FIRST.");
+        int currentPlayer = -1;
+        while (currentPlayer == -1)
+        {
+            System.out.println("\n" + players[playerOne].getName() + " ROLLED:");
             dieOne.roll();
-            System.out.println("\nPLAYER TWO ROLLED:");
+            System.out.println("\n" + players[playerOne].getName() + " ROLLED:");
             dieTwo.roll();
-            if (dieOne.getFaceValue() > dieTwo.getFaceValue()) {
-                System.out.println("\nPLAYER ONE GOES FIRST!");
-                playerSelected = true;
-            } else if (dieOne.getFaceValue() < dieTwo.getFaceValue()) {
-                System.out.println("\nPLAYER TWO GOES FIRST!");
-                playerSelected = true;
-            } else {
-                System.out.println("\nTIE! ROLL AGAIN!");
+            //Compare the values rolled and give the higher roller the currentPlayer designation so that they go first
+            if (dieOne.getFaceValue() > dieTwo.getFaceValue())
+            {
+                currentPlayer = playerOne;
+            } else if (dieOne.getFaceValue() < dieTwo.getFaceValue())
+            {
+                currentPlayer = playerTwo;
+            } else
+            {
+                System.out.println("\nTIE! ROLL AGAIN.");
             }
         }
-        //start turn
+        //Announce who goes first
+        System.out.println("\n" + players[currentPlayer].getName() + " GOES FIRST!");
 
-        //roll dice
-        System.out.println("\nYOU ROLLED: ");
-        dieOne.roll();
-        dieTwo.roll();
-        //let them choose what to add to their score
-        //setPlayerScore();
-        //check if they win or bust
-        //if someone wins
-        //displayScoreboard();
-        //ask if they want to play again
-        //else repeat for next player
+        //Start first turn
+        boolean winner = false;
+        while (!winner)
+        {
+            //Announces the player turn and what their score is.
+            System.out.println("\n**********************************\n" + players[currentPlayer].getName() + "'S TURN");
+            System.out.println("\nCURRENT SCORE: " + players[currentPlayer].getScore());
+            //Roll dice and display their values
+            System.out.println("\nYOU ROLLED: ");
+            dieOne.roll();
+            System.out.println("DIE ONE: " + dieOne.getFaceValue());
+            dieTwo.roll();
+            System.out.println("DIE TWO: " + dieTwo.getFaceValue());
+            int diceTotal = dieOne.getFaceValue() + dieTwo.getFaceValue();
+            System.out.println("\nTOTAL: " + diceTotal);
 
+            //Make the user choose if they want to add one or both dice to their score
+            boolean userSelection = false;
+            while (!userSelection)
+            {
+                System.out.println("PRESS (1) TO ONLY ADD DIE ONE TO YOUR SCORE\nPRESS (2) TO ONLY ADD DIE TWO TO YOUR SCORE\nPRESS (3) TO ADD BOTH DICE TO YOUR SCORE");
+                int userChoice = gameReader.nextInt();
+                //Skipping the \n for our next read
+                gameReader.nextLine();
+                if (userChoice == 1)
+                {
+                    players[currentPlayer].setScore(dieOne.getFaceValue());
+                    userSelection = true;
+                } else if (userChoice == 2)
+                {
+                    players[currentPlayer].setScore(dieTwo.getFaceValue());
+                    userSelection = true;
+                } else if (userChoice == 3)
+                {
+                    players[currentPlayer].setScore(diceTotal);
+                    userSelection = true;
+                } else
+                {
+                    System.out.println("INVALID INPUT. PLEASE SELECT OPTION 1, 2, OR 3.");
+                }
+            }
+
+            //Once the value(s) have been added to the users score, evaluate if they've won or bust.
+
+            if (players[currentPlayer].getScore() == winningScore)
+            {
+                System.out.println("YOUR SCORE IS EXACTLY 30! YOU WIN!");
+                winner = true;
+                players[currentPlayer].addWin();
+            } else
+            {
+                //If their score is over 30 with additions, set their score back to 0.
+                if (players[currentPlayer].getScore() > winningScore)
+                {
+                    players[currentPlayer].setScore(0);
+                    System.out.println("OOF, YOUR SCORE IS MORE THAN 30. YOU BUST!\nYOUR SCORE IS RESET BACK TO: " + players[currentPlayer].getScore());
+                } else
+                //If they didn't win or bust, add the values they chose to their score.
+                {
+                    System.out.println("YOUR NEW SCORE IS: " + players[currentPlayer].getScore() + "\n\nNEXT PLAYERS TURN!");
+                }
+                // If they haven't won, swap the currentPlayer and keep going.
+                if (currentPlayer == playerOne)
+                    currentPlayer = playerTwo;
+                else
+                    currentPlayer = playerOne;
+            }
+
+        }
+        //Once a winner has been chosen, we then display the scoreboard.
+        displayScoreboard();
     }
 
-
-    public void displayScoreboard() {
-        System.out.print("*Display scoreboard");
-        //display the winner
-        //display total session wins per player
+    public boolean playAgain()
+    {
+        //Ask the user if they want to play again after a winner has been announced
+        boolean playAgain = false;
+        while (!playAgain)
+        {
+            System.out.println("PLAY AGAIN?\nY / N");
+            String userAnswer = gameReader.nextLine();
+            //If yes we will reset each score back to 0, break out of the loop, and return true back to main.
+            if (userAnswer.equals("y"))
+            {
+                players[playerOne].setScore(0);
+                players[playerTwo].setScore(0);
+                playAgain = true;
+            } else if (userAnswer.equals("n"))
+            {
+                System.out.println("SEE YOU NEXT TIME!");
+                return false;
+            } else
+            {
+                System.out.println("NOT A VALID INPUT. TRY AGAIN.");
+            }
+        }
+        return true;
     }
 
+    public void displayScoreboard()
+    {
+        //Made these variables just to keep the scoreboard clean
+        String playerOneName = players[playerOne].getName();
+        String playerTwoName = players[playerTwo].getName();
+        int playerOneWins = players[playerOne].getWins();
+        int playerTwoWins = players[playerTwo].getWins();
+
+        //Print out the player name and cumulative wins over the session
+        System.out.print(
+                "\n+-----------------------------------------------------------------------+\n" +
+                        "|                              SCOREBOARD                               |\n" +
+                        "+-----------------------------------------------------------------------+\n" +
+                        "\n" +
+                        "            " + playerOneName + " WIN COUNT: " + playerOneWins + "\n" +
+                        "\n" +
+                        "            " + playerTwoName + " WIN COUNT: " + playerTwoWins + "\n" +
+                        "\n" +
+                        "\n" +
+                        "+-----------------------------------------------------------------------+\n" +
+                        "|                                                                       |\n" +
+                        "+-----------------------------------------------------------------------+\n");
+    }
 }
