@@ -9,16 +9,19 @@ public class Game
 
     final int playerOne = 0;
     final int playerTwo = 1;
+
+    //Creating two players
     private final Player[] players = new Player[numPlayers];
 
     public Game()
     {
+        //Creating a single Scanner that can be used throughout the game
         gameReader = new Scanner(System.in);
     }
 
     public void welcome()
     {
-        //display game title
+        //Display game title
         System.out.println("\n" +
                 "\n" +
                 "    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////\n" +
@@ -43,12 +46,12 @@ public class Game
                 "    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////\n" +
                 "\n" +
                 "\n");
-        //ask for player names and welcome them
+        //Ask for player names and welcome them
         System.out.println("ENTER PLAYER ONE'S NAME: ");
         players[playerOne] = new Player(gameReader.nextLine());
         System.out.println("ENTER PLAYER TWO'S NAME: ");
         players[playerTwo] = new Player(gameReader.nextLine());
-        System.out.println("\n +-------------------- WELCOME " + players[playerOne].getName() + " AND " + players[playerTwo].getName() + "! --------------------+\n");
+        System.out.println("\n+---------------------------------------------+\n       WELCOME " + players[playerOne].getName() + " AND " + players[playerTwo].getName() + "!\n+---------------------------------------------+\n");
     }
 
     public void displayRules()
@@ -61,24 +64,24 @@ public class Game
             String viewRules = gameReader.nextLine();
             if (viewRules.equals("y"))
             {
-                System.out.println("\n    +-----------------------------------------------------------------------+\n" +
-                        "    |                                RULES                                  |\n" +
-                        "    +-----------------------------------------------------------------------+\n" +
-                        "    |                                                                       |\n" +
-                        "    |  EACH TURN:                                                           |\n" +
-                        "    |   A player will roll a pair of dice. They will then choose to         |\n" +
-                        "    |   add the value of one or both dice to their player score. If         |\n" +
-                        "    |   after this their score is not 30, the turn then passes to the       |\n" +
-                        "    |   next player.                                                        |\n" +
-                        "    |                                                                       |\n" +
-                        "    |  YOU WIN WHEN:                                                        |\n" +
-                        "    |   You are the first player to reach a score of exactly 30 points.     |\n" +
-                        "    |                                                                       |\n" +
-                        "    |  YOU \"BUST\" WHEN:                                                     |\n" +
-                        "    |   Your score goes over 30. If this happens your player score gets     |\n" +
-                        "    |   reset back to zero. The game continues.                             |\n" +
-                        "    |                                                                       |\n" +
-                        "    +-----------------------------------------------------------------------+\n");
+                System.out.println("\n+-----------------------------------------------------------------------+\n" +
+                        "|                                RULES                                  |\n" +
+                        "+-----------------------------------------------------------------------+\n" +
+                        "|                                                                       |\n" +
+                        "|  EACH TURN:                                                           |\n" +
+                        "|   A player will roll a pair of dice. They will then choose to         |\n" +
+                        "|   add the value of one or both dice to their player score. If         |\n" +
+                        "|   after this their score is not 30, the turn then passes to the       |\n" +
+                        "|   next player.                                                        |\n" +
+                        "|                                                                       |\n" +
+                        "|  YOU WIN WHEN:                                                        |\n" +
+                        "|   You are the first player to reach a score of exactly 30 points.     |\n" +
+                        "|                                                                       |\n" +
+                        "|  YOU \"BUST\" WHEN:                                                     |\n" +
+                        "|   Your score goes over 30. If this happens your player score gets     |\n" +
+                        "|   reset back to zero. The game continues.                             |\n" +
+                        "|                                                                       |\n" +
+                        "+-----------------------------------------------------------------------+");
 
                 validInput = true;
             } else if (viewRules.equals("n"))
@@ -97,7 +100,7 @@ public class Game
         boolean startGame = false;
         while (!startGame)
         {
-            System.out.println("READY TO BEGIN?\nY / N");
+            System.out.println("\nREADY TO BEGIN?\nY / N");
             String readyCheck = gameReader.nextLine();
             if (readyCheck.equals("y"))
             {
@@ -121,14 +124,20 @@ public class Game
         Die dieOne = new Die();
         Die dieTwo = new Die();
         //Roll dice to see who goes first
-        System.out.println("LET'S ROLL TO SEE WHO GOES FIRST.");
+        System.out.println("\n+---------------------------------------------+\n       LET'S ROLL TO SEE WHO GOES FIRST\n+---------------------------------------------+");
         int currentPlayer = -1;
         while (currentPlayer == -1)
         {
             System.out.println("\n" + players[playerOne].getName() + " ROLLED:");
+            Die.waitTimer(2000);
             dieOne.roll();
-            System.out.println("\n" + players[playerOne].getName() + " ROLLED:");
+            System.out.println("DIE ONE: " + dieOne.getFaceValue());
+            Die.waitTimer(1000);
+            System.out.println("\n" + players[playerTwo].getName() + " ROLLED:");
+            Die.waitTimer(1000);
             dieTwo.roll();
+            System.out.println("DIE TWO: " + dieTwo.getFaceValue());
+
             //Compare the values rolled and give the higher roller the currentPlayer designation so that they go first
             if (dieOne.getFaceValue() > dieTwo.getFaceValue())
             {
@@ -138,27 +147,31 @@ public class Game
                 currentPlayer = playerTwo;
             } else
             {
-                System.out.println("\nTIE! ROLL AGAIN.");
+                System.out.println("\nTIE! ROLL AGAIN.\n\n+---------------------------------------------+");
             }
         }
         //Announce who goes first
+        Die.waitTimer(2000);
         System.out.println("\n" + players[currentPlayer].getName() + " GOES FIRST!");
 
-        //Start first turn
+        //Start first turn. Continue looping until a winner is declared.
         boolean winner = false;
         while (!winner)
         {
             //Announces the player turn and what their score is.
-            System.out.println("\n**********************************\n" + players[currentPlayer].getName() + "'S TURN");
-            System.out.println("\nCURRENT SCORE: " + players[currentPlayer].getScore());
+            Die.waitTimer(2000);
+            System.out.println("\n+---------------------------------------------+\n     " + players[currentPlayer].getName() + "'S TURN\n     CURRENT SCORE: " + players[currentPlayer].getScore() + "\n+---------------------------------------------+\n");
             //Roll dice and display their values
-            System.out.println("\nYOU ROLLED: ");
+            System.out.println("YOU ROLLED: ");
+            Die.waitTimer(1000);
             dieOne.roll();
             System.out.println("DIE ONE: " + dieOne.getFaceValue());
+            Die.waitTimer(1000);
             dieTwo.roll();
             System.out.println("DIE TWO: " + dieTwo.getFaceValue());
             int diceTotal = dieOne.getFaceValue() + dieTwo.getFaceValue();
-            System.out.println("\nTOTAL: " + diceTotal);
+            Die.waitTimer(1000);
+            System.out.println("\nTOTAL: " + diceTotal + "\n");
 
             //Make the user choose if they want to add one or both dice to their score
             boolean userSelection = false;
@@ -166,7 +179,7 @@ public class Game
             {
                 System.out.println("PRESS (1) TO ONLY ADD DIE ONE TO YOUR SCORE\nPRESS (2) TO ONLY ADD DIE TWO TO YOUR SCORE\nPRESS (3) TO ADD BOTH DICE TO YOUR SCORE");
                 int userChoice = gameReader.nextInt();
-                //Skipping the \n for our next read
+                //Line below is used to skip the remaining "\n" after using nextInt so that the next nextLine works properly
                 gameReader.nextLine();
                 if (userChoice == 1)
                 {
@@ -187,10 +200,9 @@ public class Game
             }
 
             //Once the value(s) have been added to the users score, evaluate if they've won or bust.
-
             if (players[currentPlayer].getScore() == winningScore)
             {
-                System.out.println("YOUR SCORE IS EXACTLY 30! YOU WIN!");
+                System.out.println("\nYOUR SCORE IS EXACTLY 30! YOU WIN!");
                 winner = true;
                 players[currentPlayer].addWin();
             } else
@@ -199,11 +211,11 @@ public class Game
                 if (players[currentPlayer].getScore() > winningScore)
                 {
                     players[currentPlayer].setScore(0);
-                    System.out.println("OOF, YOUR SCORE IS MORE THAN 30. YOU BUST!\nYOUR SCORE IS RESET BACK TO: " + players[currentPlayer].getScore());
+                    System.out.println("\nOOF, YOUR SCORE IS MORE THAN 30. YOU BUST!\nYOUR SCORE IS RESET BACK TO: " + players[currentPlayer].getScore());
                 } else
                 //If they didn't win or bust, add the values they chose to their score.
                 {
-                    System.out.println("YOUR NEW SCORE IS: " + players[currentPlayer].getScore() + "\n\nNEXT PLAYERS TURN!");
+                    System.out.println("\nYOUR NEW SCORE IS: " + players[currentPlayer].getScore() + "\n\nNEXT PLAYER'S TURN!");
                 }
                 // If they haven't won, swap the currentPlayer and keep going.
                 if (currentPlayer == playerOne)
@@ -223,7 +235,7 @@ public class Game
         boolean playAgain = false;
         while (!playAgain)
         {
-            System.out.println("PLAY AGAIN?\nY / N");
+            System.out.println("\nPLAY AGAIN?\nY / N");
             String userAnswer = gameReader.nextLine();
             //If yes we will reset each score back to 0, break out of the loop, and return true back to main.
             if (userAnswer.equals("y"))
@@ -260,7 +272,6 @@ public class Game
                         "            " + playerOneName + " WIN COUNT: " + playerOneWins + "\n" +
                         "\n" +
                         "            " + playerTwoName + " WIN COUNT: " + playerTwoWins + "\n" +
-                        "\n" +
                         "\n" +
                         "+-----------------------------------------------------------------------+\n" +
                         "|                                                                       |\n" +

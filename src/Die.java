@@ -3,34 +3,30 @@ import java.util.Random;
 
 public class Die
 {
-    private int sides;
+    private final int sides = 6;
     private int faceValue;
 
 
-    public void Die()
+    public Die()
     {
-        sides = 6;
         faceValue = 1;
     }
 
     public int getFaceValue()
     {
+        //Return the value of the die (typically after rolling)
         return faceValue;
-    }
-
-    public void setFaceValue(int value)
-    {
-        faceValue = value;
     }
 
     public void roll()
     {
+        //Getting a random number to assign to a die. This is currently hardcoded for a six sided die.
         Random value = new Random();
-        faceValue = value.nextInt(6) + 1;
+        faceValue = value.nextInt(sides) + 1;
+        //Printing out a certain dice image depending on the die's faceValue
         switch (faceValue)
         {
-            case 1:
-                System.out.print(
+            case 1: System.out.print(
                         "\n  ______\n" +
                                 " /     /| \n" +
                                 "+-----+ |\n" +
@@ -39,8 +35,7 @@ public class Die
                                 "|     |/\n" +
                                 "+-----+\n");
                 break;
-            case 2:
-                System.out.print(
+            case 2: System.out.print(
                         "\n  ______\n" +
                                 " /     /| \n" +
                                 "+-----+ |\n" +
@@ -49,8 +44,7 @@ public class Die
                                 "| *   |/\n" +
                                 "+-----+\n");
                 break;
-            case 3:
-                System.out.print(
+            case 3: System.out.print(
                         "\n  ______\n" +
                                 " /     /| \n" +
                                 "+-----+ |\n" +
@@ -59,8 +53,7 @@ public class Die
                                 "|   * |/\n" +
                                 "+-----+\n");
                 break;
-            case 4:
-                System.out.print(
+            case 4: System.out.print(
                         "\n  ______\n" +
                                 " /     /| \n" +
                                 "+-----+ |\n" +
@@ -69,8 +62,7 @@ public class Die
                                 "| * * |/\n" +
                                 "+-----+\n");
                 break;
-            case 5:
-                System.out.print(
+            case 5: System.out.print(
                         "\n  ______\n" +
                                 " /     /| \n" +
                                 "+-----+ |\n" +
@@ -79,8 +71,7 @@ public class Die
                                 "| * * |/\n" +
                                 "+-----+\n");
                 break;
-            case 6:
-                System.out.print(
+            case 6: System.out.print(
                         "\n  ______\n" +
                                 " /     /| \n" +
                                 "+-----+ |\n" +
@@ -90,5 +81,18 @@ public class Die
                                 "+-----+\n");
                 break;
         }
+    }
+
+    public static void waitTimer(int ms)
+    {
+        //Lets us create some suspense while rolling the dice
+            try
+            {
+            Thread.sleep(ms);
+            }
+            catch(InterruptedException ex)
+            {
+                Thread.currentThread().interrupt();
+            }
     }
 }

@@ -9,7 +9,9 @@ public class Main
     {
         //Create a new game
         Game game = new Game();
+        //Welcome the user and get both player names
         game.welcome();
+        //Ask if they want to see the rules
         game.displayRules();
         //Once the user confirms they are ready, startGame will return true and we'll begin our game loop
         if (game.startGame())
